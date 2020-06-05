@@ -1,0 +1,325 @@
+//
+//  
+////////////////////////////////////////////////////
+// Nombre del archivo: ProyectoP3
+// Nombre de la clase: Fecha.h
+// Descripción: Establece la fehcha (dd,mm,aa), muestra la fecha con el nombre del mes, sobrecarga los operadores +, <=, >=, <, >, ==, <<, >>.
+// Autor: Estefania Charles A01283472
+// Fecha: 18 de Mayo 2020 Versión: 1
+// Copyright © 2020 EstefaniaCharles. All rights reserved.
+////////////////////////////////////////////////////
+
+#ifndef Fecha_h
+#define Fecha_h
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Fecha{
+private:
+    int dd;
+    int mm;
+    int aa;
+public:
+    Fecha(){ //constructor default
+        dd = 0;
+        mm = 0;
+        aa = 0;
+    };
+    Fecha(int d, int m, int a){ //constructor c/parametros
+        dd = d;
+        mm = m;
+        aa = a;
+    };
+    //Acceso
+    int getDD(){
+        return dd;
+    };
+    int getMM(){
+        return mm;
+    };
+    int getAA(){
+        return aa;
+    };
+    //Otros
+    void setFecha(int d, int m, int a){ //modifica la fecha
+        dd = d;
+        mm = m;
+        aa = a;
+    };
+    string nomMes(); //introduce el nombre del mes a la hora de mostrar la fecha
+    //Sobrecarga de peradores
+    Fecha operator+(int d); //suma una cant de dias a una fecha
+    //compara entre dos fechas
+    bool operator>=(Fecha f);
+    bool operator<=(Fecha f);
+    bool operator>(Fecha f);
+    bool operator<(Fecha f);
+    bool operator==(Fecha f);
+    //
+    friend ostream &operator << (ostream &o, Fecha f); //cout (muestra fecha)
+    friend istream &operator >> (istream &i, Fecha &f); //cin (pide fecha)
+};
+
+//DEFINICION DE METODOS
+string Fecha::nomMes(){ //introduce el nombre del mes a la hora de mostrar la fecha
+    switch (mm) {
+        case 1:
+            return "Ene";
+            break;
+        case 2:
+            return "Feb";
+            break;
+        case 3:
+            return "Mar";
+            break;
+        case 4:
+            return "Abr";
+            break;
+        case 5:
+            return "May";
+            break;
+        case 6:
+            return "Jun";
+            break;
+        case 7:
+            return "Jul";
+            break;
+        case 8:
+            return "Ago";
+            break;
+        case 9:
+            return "Sep";
+            break;
+        case 10:
+            return "Oct";
+            break;
+        case 11:
+            return "Nov";
+            break;
+        case 12:
+            return "Dec";
+            break;
+        default:
+            return "ERROR";
+            break;
+    }
+};
+
+//Definicion de operadores
+
+Fecha Fecha::operator+(int d){
+    int dN = this -> dd; //apuntadores
+    int mN = this -> mm; //apuntadores
+    int aN = this -> aa; //apuntadores
+    int sum;
+    if ((mN % 2 != 0)&&(mN <= 7)){ //enero, marzo, mayo y julio
+        if (dN == 31){
+            dN = 0;
+            dN += d;
+            mN++;
+        }
+        else{
+            sum = dN + d;
+            if (sum>31){
+                sum -= 31;
+                mN++;
+                dN = sum;
+            }
+            else
+                dN = sum;
+        }
+    }
+    else if ((mN % 2 == 0)&&(mN == 8 || mN == 10)){ //agosto y octubre
+        if (dN == 31){
+            dN = 0;
+            dN += d;
+            mN++;
+        }
+        else{
+            sum = dN + d;
+            if (sum>31){
+                sum -= 31;
+                mN++;
+                dN = sum;
+            }
+            else
+                dN = sum;
+        }
+    }
+    else if (mN == 12){ //diciembre
+        if (dN == 31){
+            dN = 0;
+            dN += d;
+            mN = 1;
+            aN++;
+        }
+        else{
+            sum = dN + d;
+            if (sum>31){
+                sum -= 31;
+                mN++;
+                dN = sum;
+                aN++;
+            }
+            else
+                dN = sum;
+        }
+    }
+    else if ((mN % 2 == 0) && (mN <= 6)){ //febrero, abril y junio
+        if (dN == 30){
+            dN = 0;
+            dN += d;
+            mN++;
+        }
+        else if (dN == 28){
+            dN = 0;
+            dN += d;
+            mN++;
+        }
+        else{
+            sum = dN + d;
+            if (sum>30){
+                sum -= 30;
+                mN++;
+                dN = sum;
+            }
+            else
+                dN = sum;
+        }
+    }
+    else if ((mN % 2 != 0) && (mN == 9 || mN == 11)){ //septiembre y noviembre
+        if (dN == 30){
+            dN = 0;
+            dN += d;
+            mN++;
+        }
+        else{
+            sum = dN + d;
+            if (sum>30){
+                sum -= 30;
+                mN++;
+                dN = sum;
+            }
+            else
+                dN = sum;
+        }
+    }
+    Fecha fN (dN, mN, aN);
+    return fN;
+}
+
+bool Fecha::operator>=(Fecha f){
+    if (aa > f.aa)
+        return true;
+    else if (aa == f.aa){
+        if (mm > f.mm)
+            return true;
+        else if (mm == f.mm){
+            if (dd > f.dd)
+                return true;
+            else if (dd == f.dd)
+                return true;
+            else
+                return false;
+        }
+        else
+            return false;
+    }
+    else
+        return false;
+}
+
+bool Fecha::operator<=(Fecha f){
+    if (aa < f.aa)
+        return true;
+    else if (aa == f.aa){
+        if (mm < f.mm)
+            return true;
+        else if (mm == f.mm){
+            if (dd < f.dd)
+                return true;
+            else if (dd == f.dd)
+                return true;
+            else
+                return false;
+        }
+        else
+            return false;
+    }
+    else
+        return false;
+}
+
+bool Fecha::operator>(Fecha f){
+    if (aa > f.aa)
+        return true;
+    else if (aa == f.aa){
+        if (mm > f.mm)
+            return true;
+        else if (mm == f.mm){
+            if (dd > f.dd)
+                return true;
+            else if (dd == f.dd)
+                return false;
+            else
+                return false;
+        }
+        else
+            return false;
+    }
+    else
+        return false;
+}
+
+bool Fecha::operator<(Fecha f){
+    if (aa < f.aa)
+        return true;
+    else if (aa == f.aa){
+        if (mm < f.mm)
+            return true;
+        else if (mm == f.mm){
+            if (dd < f.dd)
+                return true;
+            else if (dd == f.dd)
+                return false;
+            else
+                return false;
+        }
+        else
+            return false;
+    }
+    else
+        return false;
+}
+
+bool Fecha::operator==(Fecha f){ //muestra la fecha
+    if ((aa == f.aa) && (mm == f.mm) && (dd == f.dd))
+        return true;
+    else
+        return false;
+}
+
+ostream &operator << (ostream &o, Fecha f) {
+    o << "" << f.dd << "/" << f.nomMes() << "/" << f.aa;
+    return o;
+}
+
+istream &operator >> (istream &i, Fecha &f) { //pide datos
+    do{
+        cout << "Dia (dd): ";
+        i >> f.dd;
+    }while(f.dd<=0 || f.dd>31);
+    do{
+        cout << "Mes (mm): ";
+        i >> f.mm;
+    }while(f.mm<=0 || f.mm>12);
+    do{
+        cout << "Anio (aaaa): ";
+        i >> f.aa;
+    }while(f.aa<1000);
+    return i;
+}
+
+
+#endif /* Fecha_h */
